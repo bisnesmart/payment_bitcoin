@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="acquirer_form_sips" model="ir.ui.view">
+            <field name="name">acquirer.form.bitcoin</field>
+            <field name="model">payment.acquirer</field>
+            <field name="inherit_id" ref="payment.acquirer_form"/>
+            <field name="arch" type="xml">
+                <xpath expr='//group[@name="acquirer_display"]' position='after'>
+                    <group attrs="{'invisible': [('provider', '!=', 'bitcoin')]}">
+                        <field name="bitcoin_rpc_server">dummy</field>
+                        <field name="bitcoin_rpc_port">dummy</field>
+                        <field name="bitcoin_rpc_username">dummy</field>
+                        <field name="bitcoin_rpc_password">dummy</field>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>
