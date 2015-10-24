@@ -20,9 +20,8 @@ class AcquirerPaymentBitcoin(models.Model):
 	@api.model
 	def _get_providers(self):
 		providers = super(AcquirerPaymentBitcoin, self)._get_providers()
-		providers.append(['bitcoin', _('Bitcoin')])
+		providers.append(['bitcoin', 'Bitcoin'])
 		return providers
-
 	def transfer_get_form_action_url(self, cr, uid, id, context=None):
 		return '/payment/bitcoin/feedback'
 
@@ -35,13 +34,13 @@ class AcquirerPaymentBitcoin(models.Model):
 		</div>'''
 		return post_msg
 
-	def create(self, cr, uid, values, context=None):
-		""" Hook in create to create a default post_msg. This is done in create
-		to have access to the name and other creation values. If no post_msg
-		or a void post_msg is given at creation, generate a default one. """
-		if values.get('provider') == 'bitcoin' and not values.get('post_msg'):
-			values['post_msg'] = self._format_bitcoin_data(cr, uid, context=context)
-		return super(AcquirerPaymentBitcoin, self).create(cr, uid, values, context=context)
+	# def create(self, cr, uid, values, context=None):
+	# 	""" Hook in create to create a default post_msg. This is done in create
+	# 	to have access to the name and other creation values. If no post_msg
+	# 	or a void post_msg is given at creation, generate a default one. """
+	# 	if values.get('provider') == 'transfer' and not values.get('post_msg'):
+ #            values['post_msg'] = self._format_transfer_data(cr, uid, context=context)
+ #        return super(TransferPaymentAcquirer, self).create(cr, uid, values, context=context)
 
 
 class BitcoinPaymentTransaction(models.Model):
