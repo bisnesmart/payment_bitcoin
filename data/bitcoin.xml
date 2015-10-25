@@ -6,14 +6,11 @@
             <field name="name">Bitcoin</field>
             <field name="provider">bitcoin</field>
             <field name="company_id" ref="base.main_company"/>
-            <field name="view_template_id" ref="bitcoin_acquirer_button"/>
+            <field name="view_template_id" ref="payment_bitcoin.bitcoin_acquirer_button"/>
             <field name="environment">test</field>
             <field name="pre_msg"><![CDATA[
 <p>QR an dbitcoin information will be provided after choosing the payment mode</p>]]></field>
-            <field name="bitcoin_rpc_server">dummy</field>
-            <field name="bitcoin_rpc_port">dummy</field>
-            <field name="bitcoin_rpc_username">dummy</field>
-            <field name="bitcoin_rpc_password">dummy</field>
+            <field name="bitcoin_address">dummy</field>
         </record>
 
     </data>

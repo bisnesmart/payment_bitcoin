@@ -3,10 +3,7 @@
     <data noupdate="1">
 
         <template id="bitcoin_acquirer_button">
-            <form t-if="acquirer" t-att-action="tx_url" method="post" target="_self">
-                <t t-if="tx_values.get('return_url')">
-                    <input type='hidden' name='return_url' t-att-value='tx_values["return_url"]'/>
-                </t>
+            <form tt-att-action="tx_url" method="post" target="_self">
                 <input type='hidden' name='reference' t-att-value='reference'/>
                 <input type='hidden' name='amount' t-att-value='amount or "0.0"'/>
                 <input type='hidden' name='currency' t-att-value='currency.name'/>
