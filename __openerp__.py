@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "payment_bicoin",
+    'name': "payment_bitcoin",
 
     'summary': """
         Bitcoin Payment Acquirer""",
@@ -24,7 +24,7 @@
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
-        'views/payment_acquirer.xml',
+        #'views/payment_acquirer.xml',
         'views/bitcoin.xml',
         'data/bitcoin.xml',
     ],
