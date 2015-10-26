@@ -39,6 +39,8 @@ class AcquirerPaymentBitcoin(osv.Model):
 		post_msg = '''<div>
 <h3>Scan QR</h3>
 <h4>Communication</h4>
+<img t-att-src="'/report/barcode/QR/%s' % 'My text in qr code'"/>
+<img src="/report/barcode?width=200&amp;type=QR&amp;value=bitcoin:'%s'&amp;height=200" data-oe-field="arch">
 <p>Please use the order name as communication reference.</p>
 </div>'''
 		return post_msg
