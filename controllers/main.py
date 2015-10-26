@@ -22,5 +22,4 @@ class OgoneController(http.Controller):
 	  	cr, uid, context = request.cr, SUPERUSER_ID, request.context
 	  	_logger.info('Beginning form_feedback with post data %s', pprint.pformat(post))  # debug
 	  	request.registry['payment.transaction'].form_feedback(cr, uid, post, 'bitcoin', context)
-	  	return 'Hello'
-	  	#werkzeug.utils.redirect(post.pop('return_url', '/'))
+	  	return werkzeug.utils.redirect(post.pop('return_url', '/'))
