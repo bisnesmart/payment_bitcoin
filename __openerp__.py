@@ -9,7 +9,7 @@
         Bitcoin Payment Acquirer
     """,
 
-    'author': "bisneSmart",
+    'author': "bisneSmart, OpenERP SA",
     'website': "http://www.bisneSmart.com",
 
     # Categories can be used to filter modules in modules listing
