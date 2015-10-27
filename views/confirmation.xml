@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template inherit_id="website_sale.confirmation" name="confirmation bitcoin" id="website_sale.confirmation_bitcoin" >
+                <xpath expr="//div[@class= 'clearfix']" position="after">
+                        <t t-set="direc" t-value="order.payment_acquirer_id.bitcoin_address"/>
+                        <t t-set="amount" t-value="order.amount_total"/>
+                        <t t-esc="direc"/>
+                        <t t-esc="amount"/>
+
+                        <img t-if="order.payment_acquirer_id.name in ['Bitcoin']" src='/report/barcode?width=200&amp;type=QR&amp;value=order.payment_acquirer_id.bitcoin_address&amp;height=200'/>
+                </xpath>
+        </template>
+    </data>
+</openerp>

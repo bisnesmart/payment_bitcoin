@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "payment_bicoin",
+    'name': "payment_bitcoin",
 
     'summary': """
         Bitcoin Payment Acquirer""",
@@ -9,7 +9,7 @@
         Bitcoin Payment Acquirer
     """,
 
-    'author': "bisneSmart",
+    'author': "bisneSmart, OpenERP SA",
     'website': "http://www.bisneSmart.com",
 
     # Categories can be used to filter modules in modules listing
@@ -25,6 +25,7 @@
     'data': [
         # 'security/ir.model.access.csv',
         'views/payment_acquirer.xml',
+        'views/confirmation.xml',
         'views/bitcoin.xml',
         'data/bitcoin.xml',
     ],
