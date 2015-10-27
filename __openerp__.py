@@ -25,7 +25,7 @@
     'data': [
         # 'security/ir.model.access.csv',
         'views/payment_acquirer.xml',
-        #'views/confirmation.xml',
+        'views/confirmation.xml',
         'views/bitcoin.xml',
         'data/bitcoin.xml',
     ],
