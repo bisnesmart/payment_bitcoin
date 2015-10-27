@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="confirmation_bitcoin" model="ir.ui.view">
+            <field name="name">Confirmation bitcoin</field>
+            <field name="model">website_sale.confirmation</field>
+            <field name="inherit_id" ref="website_sale.confirmation"/>
+            <field name="arch" type="xml">
+            </field>
+        </record>
+    </data>
+</openerp>

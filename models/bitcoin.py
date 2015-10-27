@@ -21,6 +21,9 @@ class AcquirerPaymentBitcoin(osv.Model):
 		'bitcoin_address': fields.char('Bitcoin address')
 
 	}
+	_defaults = {
+		'bitcoin_address': False
+	}
 
 	#TODO: Enlazar con servidor rpc
 	# bitcoin_rpc_server = fields.Char('Bitcoin Server rpc')
@@ -40,9 +43,10 @@ class AcquirerPaymentBitcoin(osv.Model):
 <h3>Scan QR</h3>
 <h4>Communication</h4>
 <img t-att-src="'/report/barcode/QR/%s' % 'My text in qr code'"/>
-<img src="/report/barcode?width=200&amp;type=QR&amp;value=bitcoin:'%s'&amp;height=200" data-oe-field="arch">
+<img src="/report/barcode?width=200&amp;type=QR&amp;value=bitcoin:'%(trans)s'&amp;height=200" data-oe-field="arch">
 <p>Please use the order name as communication reference.</p>
-</div>'''
+<p>%s<p> % (trans)
+</div>''' 
 		return post_msg
 	
 	def create(self, cr, uid, values, context=None):
