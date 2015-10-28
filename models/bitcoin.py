@@ -22,7 +22,7 @@ class AcquirerPaymentBitcoin(osv.Model):
 
 	}
 	_defaults = {
-		'bitcoin_address': False
+		'bitcoin_address': 'DireccionBitcoin'
 	}
 
 	#TODO: Enlazar con servidor rpc
@@ -36,7 +36,9 @@ class AcquirerPaymentBitcoin(osv.Model):
 		providers.append(['bitcoin', 'Bitcoin'])
 		return providers
 	def bitcoin_get_form_action_url(self, cr, uid, id, context=None):
+
 		return '/payment/bitcoin/feedback'
+
 
 	def _format_bitcoin_data(self, cr, uid, context=None):
 		post_msg = '''<div>
@@ -61,6 +63,12 @@ class BitcoinPaymentTransaction(osv.Model):
 
  	_inherit = 'payment.transaction'
 
+	_columns ={
+
+		'bitcoin_address_amount': fields.char('addres with amount')
+
+	}
+
 	def _bitcoin_form_get_tx_from_data(self,cr, uid, data, context=None):
 		reference, amount, currency_name = data.get('reference'), data.get('amount'), data.get('currency_name')
 		tx_ids = self.search(
@@ -79,6 +87,20 @@ class BitcoinPaymentTransaction(osv.Model):
 
 		return self.browse(cr, uid, tx_ids[0], context=context)
 
+
+
+
+	
 	def _bitcoin_form_validate(self, cr, uid, tx, data, context=None):
+
+		
+		
+		change = tx.currency_id.rate_silent
+		amount = tx.amount * change
+		bitcoin_address_amount = tx.acquirer_id.bitcoin_address
+
 		_logger.info('Validated bitcoin payment for tx %s: set as pending' % (tx.reference))
-		return tx.write({'state': 'pending'})
+		return tx.write({'state': 'pending',
+			'amount': amount,
+			'bitcoin_address_amount': bitcoin_address_amount,
+			'currency_id': currency_id})

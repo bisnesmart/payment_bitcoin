@@ -3,7 +3,7 @@
     <data>
         <template inherit_id="website_sale.confirmation" name="confirmation bitcoin" id="website_sale.confirmation_bitcoin" >
                 <xpath expr="//div[@class= 'clearfix']" position="after">
-                        <t t-set="direc" t-value="order.payment_acquirer_id.bitcoin_address"/>
+                        <t t-set="direc" t-value="order.payment_tx_id.bitcoin_address_amount"/>
                         <t t-set="amount" t-value="order.amount_total"/>
                         <t t-esc="direc"/>
                         <t t-esc="amount"/>
