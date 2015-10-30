@@ -18,11 +18,13 @@ class AcquirerPaymentBitcoin(osv.Model):
 
 	_columns ={
 
-		'bitcoin_address': fields.char('Bitcoin address')
+		'bitcoin_address': fields.char('Bitcoin address'),
+		'bitcoin_address_testnet': fields.char('Bitcoin address (TestNet)')
 
 	}
 	_defaults = {
-		'bitcoin_address': 'DireccionBitcoin'
+		'bitcoin_address': 'DireccionBitcoin',
+		'bitcoin_address_testnet': 'DireccionBitcoinTestnet'
 	}
 
 	#TODO: Enlazar con servidor rpc
@@ -65,8 +67,10 @@ class BitcoinPaymentTransaction(osv.Model):
 
 	_columns ={
 
-		'bitcoin_address_amount': fields.char('addres with amount'),
-		'amount_in_bitcoin': fields.float('Bitcoins',digits=(8,6))
+		'bitcoin_address_amount': fields.char('addres with amount', help='String convert QR'),
+		'amount_in_bitcoin': fields.float('Bitcoins',digits=(4,8), help='Amount in bitcoins'),
+		'payment_currency':fields.many2one('res.currency', 'Payement Currency', help='Currency accepted in payment'),
+		'rate_silent': fields.float('Rate silent', digits=(16,2), help='Rate silent to convert amount in bitcoins')
 
 		#'currency_id':fields.many2one('res.currency')
 
@@ -97,12 +101,13 @@ class BitcoinPaymentTransaction(osv.Model):
 	def _bitcoin_form_validate(self, cr, uid, tx, data, context=None):
 		#Buscar el ID de la moneda XBT
 		currency_obj = self.pool.get('res.currency')
-		currency_id = currency_obj.search(cr, uid,[('name','=','XBT')])
+		payment_currency_id = currency_obj.search(cr, uid,[('name','=','XBT')])
+		
 
 		#Buscar el importe de conversion
-		currency = self.pool.get('res.currency').browse(cr, uid, currency_id[0], context)
+		currency = self.pool.get('res.currency').browse(cr, uid, payment_currency_id[0], context)
 		rate_silent =  currency.rate_silent
-		# Meter id de moneda currency_id[0]
+		# Meter id de moneda 
 
 		amount_in_bitcoin = tx.amount / rate_silent
 		#bitcoin_address_amount = tx.acquirer_id.bitcoin_address
@@ -113,4 +118,5 @@ class BitcoinPaymentTransaction(osv.Model):
 			'amount': tx.amount,
 			#'bitcoin_address_amount': bitcoin_address_amount,
 			'state_message': qr,
-			'amount_in_bitcoin': amount_in_bitcoin })
+			'amount_in_bitcoin': amount_in_bitcoin,
+			'payment_currency': payment_currency_id[0] })
