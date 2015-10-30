@@ -10,10 +10,29 @@
                 <xpath expr='//group[@name="acquirer_display"]' position='after'>
                     <group attrs="{'invisible': [('provider', '!=', 'bitcoin')]}">
                         <field name="bitcoin_address">dummy</field>
+                        <field name="bitcoin_address_testnet">dummy</field>
                     </group>
                 </xpath>
             </field>
         </record>
+
+        <record id="trnsaction_form_bitcoin" model="ir.ui.view">
+            <field name="name">acquirer.transaction.form.bitcoin</field>
+            <field name="model">payment.transaction</field>
+            <field name="inherit_id" ref="payment.transaction_form"/>
+            <field name="arch" type="xml">
+                <xpath expr='//notebook' position='inside'>
+                    <page string='Bitcoin Tx Details'>
+                        <group >
+                            <field name="amount_in_bitcoin">dummy</field>
+                            <field name="payment_currency">dummy</field>
+                            <field name="rate_silent">dummy</field>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
 
     </data>
 </openerp>

@@ -111,7 +111,7 @@ class BitcoinPaymentTransaction(osv.Model):
 
 		amount_in_bitcoin = tx.amount / rate_silent
 		#bitcoin_address_amount = tx.acquirer_id.bitcoin_address
-		qr = 'bitcoin:'+ tx.acquirer_id.bitcoin_address +'?amount='+ str(amount_in_bitcoin)
+		qr = 'bitcoin:'+ tx.acquirer_id.bitcoin_address +'?amount='+ str(amount_in_bitcoin)+'&amp;label='+reference
 
 		_logger.info('Validated bitcoin payment for tx %s: set as pending' % (tx.reference))
 		return tx.write({'state': 'pending',
@@ -119,4 +119,5 @@ class BitcoinPaymentTransaction(osv.Model):
 			#'bitcoin_address_amount': bitcoin_address_amount,
 			'state_message': qr,
 			'amount_in_bitcoin': amount_in_bitcoin,
-			'payment_currency': payment_currency_id[0] })
+			'payment_currency': payment_currency_id[0],
+			'rate_silent': rate_silent })
