@@ -65,7 +65,10 @@ class BitcoinPaymentTransaction(osv.Model):
 
 	_columns ={
 
-		'bitcoin_address_amount': fields.char('addres with amount')
+		'bitcoin_address_amount': fields.char('addres with amount'),
+		'amount_in_bitcoin': fields.float('Bitcoins',digits=(8,6))
+
+		#'currency_id':fields.many2one('res.currency')
 
 	}
 
@@ -92,15 +95,22 @@ class BitcoinPaymentTransaction(osv.Model):
 
 	
 	def _bitcoin_form_validate(self, cr, uid, tx, data, context=None):
+		#Buscar el ID de la moneda XBT
+		currency_obj = self.pool.get('res.currency')
+		currency_id = currency_obj.search(cr, uid,[('name','=','XBT')])
 
-		
-		
-		change = tx.currency_id.rate_silent
-		amount = tx.amount * change
-		bitcoin_address_amount = tx.acquirer_id.bitcoin_address
+		#Buscar el importe de conversion
+		currency = self.pool.get('res.currency').browse(cr, uid, currency_id[0], context)
+		rate_silent =  currency.rate_silent
+		# Meter id de moneda currency_id[0]
+
+		amount_in_bitcoin = tx.amount / rate_silent
+		#bitcoin_address_amount = tx.acquirer_id.bitcoin_address
+		qr = 'bitcoin:'+ tx.acquirer_id.bitcoin_address +'?amount='+ str(amount_in_bitcoin)
 
 		_logger.info('Validated bitcoin payment for tx %s: set as pending' % (tx.reference))
 		return tx.write({'state': 'pending',
-			'amount': amount,
-			'bitcoin_address_amount': bitcoin_address_amount,
-			'currency_id': currency_id})
+			'amount': tx.amount,
+			#'bitcoin_address_amount': bitcoin_address_amount,
+			'state_message': qr,
+			'amount_in_bitcoin': amount_in_bitcoin })
