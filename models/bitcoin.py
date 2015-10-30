@@ -45,9 +45,8 @@ class AcquirerPaymentBitcoin(osv.Model):
 	def _format_bitcoin_data(self, cr, uid, context=None):
 		post_msg = '''<div>
 <h3>Scan QR</h3>
-<h4>Communication</h4>
-<img src="/report/barcode?width=200&amp;type=QR&amp;value=bitcoin:'%(trans)s'&amp;height=200" data-oe-field="arch">
-<p>Please use the order name as communication reference.</p>
+<h4></h4>
+<p>When transaction is confirmed we send email</p>
 </div>''' 
 		return post_msg
 	
@@ -102,8 +101,7 @@ class BitcoinPaymentTransaction(osv.Model):
 	def _bitcoin_form_validate(self, cr, uid, tx, data, context=None):
 		#Buscar el ID de la moneda XBT
 		currency_obj = self.pool.get('res.currency')
-		payment_currency_id = currency_obj.search(cr, uid,[('name','=','XBT')])
-		
+		payment_currency_id = currency_obj.search(cr, uid,[('name','=','XBT')])		
 
 		#Buscar el importe de conversion
 		currency = self.pool.get('res.currency').browse(cr, uid, payment_currency_id[0], context)
@@ -111,11 +109,9 @@ class BitcoinPaymentTransaction(osv.Model):
 		# Meter id de moneda 
 
 		amount_in_bitcoin = tx.amount / rate_silent
+		amount_in_bitcoin = round(amount_in_bitcoin,8)
 		#bitcoin_address_amount = tx.acquirer_id.bitcoin_address
 		qr = 'bitcoin:'+ tx.acquirer_id.bitcoin_address +'?amount='+ str(amount_in_bitcoin)
-
-		qr_transaction = '<img src="/report/barcode?width=200&amp;type=QR&amp;value='+qr+'&amp;height=200" data-oe-field="arch">'
-
 
 		_logger.info('Validated bitcoin payment for tx %s: set as pending' % (tx.reference))
 		return tx.write({'state': 'pending',
