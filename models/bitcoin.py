@@ -70,7 +70,8 @@ class BitcoinPaymentTransaction(osv.Model):
 		'bitcoin_address_amount': fields.char('addres with amount', help='String convert QR'),
 		'amount_in_bitcoin': fields.float('Bitcoins',digits=(4,8), help='Amount in bitcoins'),
 		'payment_currency':fields.many2one('res.currency', 'Payement Currency', help='Currency accepted in payment'),
-		'rate_silent': fields.float('Rate silent', digits=(16,2), help='Rate silent to convert amount in bitcoins')
+		'rate_silent': fields.float('Rate silent', digits=(16,2), help='Rate silent to convert amount in bitcoins'),
+		'qr_transaction': fields.char()
 
 		#'currency_id':fields.many2one('res.currency')
 
@@ -111,7 +112,10 @@ class BitcoinPaymentTransaction(osv.Model):
 
 		amount_in_bitcoin = tx.amount / rate_silent
 		#bitcoin_address_amount = tx.acquirer_id.bitcoin_address
-		qr = 'bitcoin:'+ tx.acquirer_id.bitcoin_address +'?amount='+ str(amount_in_bitcoin)+'&amp;label='+reference
+		qr = 'bitcoin:'+ tx.acquirer_id.bitcoin_address +'?amount='+ str(amount_in_bitcoin)
+
+		qr_transaction = '<img src="/report/barcode?width=200&amp;type=QR&amp;value='+qr+'&amp;height=200" data-oe-field="arch">'
+
 
 		_logger.info('Validated bitcoin payment for tx %s: set as pending' % (tx.reference))
 		return tx.write({'state': 'pending',
@@ -120,4 +124,5 @@ class BitcoinPaymentTransaction(osv.Model):
 			'state_message': qr,
 			'amount_in_bitcoin': amount_in_bitcoin,
 			'payment_currency': payment_currency_id[0],
-			'rate_silent': rate_silent })
+			'rate_silent': rate_silent,
+			'qr_transaction': qr })
