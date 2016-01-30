@@ -31,7 +31,7 @@
         'views/confirmation.xml',
         'views/bitcoin.xml',
         'data/bitcoin.xml',
-        'data/currency_xbt_BTC.xml'
+        #'data/currency_xbt_BTC.xml'
     ],
     'installable': True,
 
