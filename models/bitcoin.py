@@ -108,7 +108,7 @@ class BitcoinPaymentTransaction(osv.Model):
 		rate_silent =  currency.rate_silent
 		# Meter id de moneda
 
-		amount_in_bitcoin = tx.amount / rate_silent
+		amount_in_bitcoin = tx.amount * rate_silent
 		amount_in_bitcoin = round(amount_in_bitcoin,8)
 		#bitcoin_address_amount = tx.acquirer_id.bitcoin_address
 		qr = 'bitcoin:'+ tx.acquirer_id.bitcoin_address +'?amount='+ str(amount_in_bitcoin)
