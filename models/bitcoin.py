@@ -47,9 +47,9 @@ class AcquirerPaymentBitcoin(osv.Model):
 <h3>Scan QR</h3>
 <h4></h4>
 <p>When transaction is confirmed we send email</p>
-</div>''' 
+</div>'''
 		return post_msg
-	
+
 	def create(self, cr, uid, values, context=None):
 		""" Hook in create to create a default post_msg. This is done in create
 		to have access to the name and other creation values. If no post_msg
@@ -97,16 +97,16 @@ class BitcoinPaymentTransaction(osv.Model):
 
 
 
-	
+
 	def _bitcoin_form_validate(self, cr, uid, tx, data, context=None):
-		#Buscar el ID de la moneda XBT
+		#Buscar el ID de la moneda BTC
 		currency_obj = self.pool.get('res.currency')
-		payment_currency_id = currency_obj.search(cr, uid,[('name','=','XBT')])		
+		payment_currency_id = currency_obj.search(cr, uid,[('name','=','BTC')])
 
 		#Buscar el importe de conversion
 		currency = self.pool.get('res.currency').browse(cr, uid, payment_currency_id[0], context)
 		rate_silent =  currency.rate_silent
-		# Meter id de moneda 
+		# Meter id de moneda
 
 		amount_in_bitcoin = tx.amount / rate_silent
 		amount_in_bitcoin = round(amount_in_bitcoin,8)
