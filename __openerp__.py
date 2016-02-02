@@ -9,7 +9,7 @@
         Bitcoin Payment Acquirer
     """,
 
-    'author': "bisneSmart, OpenERP SA",
+    'author': "bisneSmart, OpenERP SA", "CamptoCamp",
     'website': "http://www.bisneSmart.com",
 
     # Categories can be used to filter modules in modules listing
@@ -22,6 +22,7 @@
     'depends': [
         'payment',
         'website_sale',
+        'currency_rate_update',
     ],
 
     # always loaded

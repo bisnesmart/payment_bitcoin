@@ -6,6 +6,7 @@ from openerp.addons.payment.models.payment_acquirer import ValidationError
 from openerp.osv import osv, fields
 from openerp.tools.float_utils import float_compare
 from openerp.tools.translate import _
+from datetime import datetime, time
 
 import logging
 import pprint
@@ -102,6 +103,11 @@ class BitcoinPaymentTransaction(osv.Model):
 		#Buscar el ID de la moneda BTC
 		currency_obj = self.pool.get('res.currency')
 		payment_currency_id = currency_obj.search(cr, uid,[('name','=','BTC')])
+
+		currency_rate_update_service = self.pool.get('currency.rate.update.service')
+
+		currency_rate_update_service._run_currency_update_btc(cr,uid,context)
+
 
 		#Buscar el importe de conversion
 		currency = self.pool.get('res.currency').browse(cr, uid, payment_currency_id[0], context)
