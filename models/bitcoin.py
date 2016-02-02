@@ -6,6 +6,7 @@ from openerp.addons.payment.models.payment_acquirer import ValidationError
 from openerp.osv import osv, fields
 from openerp.tools.float_utils import float_compare
 from openerp.tools.translate import _
+from datetime import datetime, time
 
 import logging
 import pprint
@@ -18,11 +19,13 @@ class AcquirerPaymentBitcoin(osv.Model):
 
 	_columns ={
 
-		'bitcoin_address': fields.char('Bitcoin address')
+		'bitcoin_address': fields.char('Bitcoin address'),
+		'bitcoin_address_testnet': fields.char('Bitcoin address (TestNet)')
 
 	}
 	_defaults = {
-		'bitcoin_address': False
+		'bitcoin_address': 'DireccionBitcoin',
+		'bitcoin_address_testnet': 'DireccionBitcoinTestnet'
 	}
 
 	#TODO: Enlazar con servidor rpc
@@ -36,17 +39,18 @@ class AcquirerPaymentBitcoin(osv.Model):
 		providers.append(['bitcoin', 'Bitcoin'])
 		return providers
 	def bitcoin_get_form_action_url(self, cr, uid, id, context=None):
+
 		return '/payment/bitcoin/feedback'
+
 
 	def _format_bitcoin_data(self, cr, uid, context=None):
 		post_msg = '''<div>
 <h3>Scan QR</h3>
-<h4>Communication</h4>
-<img src="/report/barcode?width=200&amp;type=QR&amp;value=bitcoin:'%(trans)s'&amp;height=200" data-oe-field="arch">
-<p>Please use the order name as communication reference.</p>
-</div>''' 
+<h4></h4>
+<p>When transaction is confirmed we send email</p>
+</div>'''
 		return post_msg
-	
+
 	def create(self, cr, uid, values, context=None):
 		""" Hook in create to create a default post_msg. This is done in create
 		to have access to the name and other creation values. If no post_msg
@@ -60,6 +64,18 @@ class AcquirerPaymentBitcoin(osv.Model):
 class BitcoinPaymentTransaction(osv.Model):
 
  	_inherit = 'payment.transaction'
+
+	_columns ={
+
+		'bitcoin_address_amount': fields.char('addres with amount', help='String convert QR'),
+		'amount_in_bitcoin': fields.float('Bitcoins',digits=(4,8), help='Amount in bitcoins'),
+		'payment_currency':fields.many2one('res.currency', 'Payement Currency', help='Currency accepted in payment'),
+		'rate_silent': fields.float('Rate silent', digits=(16,2), help='Rate silent to convert amount in bitcoins'),
+		'qr_transaction': fields.char()
+
+		#'currency_id':fields.many2one('res.currency')
+
+	}
 
 	def _bitcoin_form_get_tx_from_data(self,cr, uid, data, context=None):
 		reference, amount, currency_name = data.get('reference'), data.get('amount'), data.get('currency_name')
@@ -79,6 +95,36 @@ class BitcoinPaymentTransaction(osv.Model):
 
 		return self.browse(cr, uid, tx_ids[0], context=context)
 
+
+
+
+
 	def _bitcoin_form_validate(self, cr, uid, tx, data, context=None):
+		#Buscar el ID de la moneda BTC
+		currency_obj = self.pool.get('res.currency')
+		payment_currency_id = currency_obj.search(cr, uid,[('name','=','BTC')])
+
+		currency_rate_update_service = self.pool.get('currency.rate.update.service')
+
+		currency_rate_update_service._run_currency_update_btc(cr,uid,context)
+
+
+		#Buscar el importe de conversion
+		currency = self.pool.get('res.currency').browse(cr, uid, payment_currency_id[0], context)
+		rate_silent =  currency.rate_silent
+		# Meter id de moneda
+
+		amount_in_bitcoin = tx.amount * rate_silent
+		amount_in_bitcoin = round(amount_in_bitcoin,8)
+		#bitcoin_address_amount = tx.acquirer_id.bitcoin_address
+		qr = 'bitcoin:'+ tx.acquirer_id.bitcoin_address +'?amount='+ str(amount_in_bitcoin)
+
 		_logger.info('Validated bitcoin payment for tx %s: set as pending' % (tx.reference))
-		return tx.write({'state': 'pending'})
+		return tx.write({'state': 'pending',
+			'amount': tx.amount,
+			#'bitcoin_address_amount': bitcoin_address_amount,
+			'state_message': qr,
+			'amount_in_bitcoin': amount_in_bitcoin,
+			'payment_currency': payment_currency_id[0],
+			'rate_silent': rate_silent,
+			'qr_transaction': qr })

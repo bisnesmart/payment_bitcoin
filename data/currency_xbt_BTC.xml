@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <record id="BTC" model="res.currency">
+           <field name="name">BTC</field>
+           <field name="symbol">฿</field>
+           <field name="rounding">0.0001</field>
+           <field name="active" eval="True"/>
+           <field name="acurracy">8</field>
+           <!-- <field name="rate_silent">290.0000</field> -->
+       </record>
+       <record forcecreate="0" id="BTC" model="res.currency.rate">
+          <field name="rate">297.26</field>
+          <field name="currency_id" ref="BTC"/>
+          <field name="name">2015-11-20</field>
+      </record>
+     </data>
+ </openerp>
